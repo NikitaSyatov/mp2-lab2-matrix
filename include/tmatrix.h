@@ -9,6 +9,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <assert.h>
 
 using namespace std;
 
@@ -26,18 +27,14 @@ protected:
 public:
     TDynamicVector(size_t size = 1) : sz(size)
     {
-        if (sz < 0 || sz > MAX_VECTOR_SIZE)
+        if (sz <= 0 || sz > MAX_VECTOR_SIZE)
             throw exception("error");
         else
-        {
             pMem = new T[sz]();// {}; // У типа T д.б. констуктор по умолчанию
-            for (size_t i = 0; i < sz; i++)
-                pMem[i] = 0;
-        }
     }
     TDynamicVector(T* arr, size_t s) : sz(s)
     {
-        //assert(arr != nullptr && "TDynamicVector ctor requires non-nullptr arg");
+        assert(arr != nullptr && "TDynamicVector ctor requires non-nullptr arg");
         pMem = new T[sz]();
         std::copy(arr, arr + sz, pMem);
     }
@@ -50,6 +47,7 @@ public:
     TDynamicVector(TDynamicVector&& v) noexcept
     {
         pMem = nullptr;
+        sz = 0;
         swap(*this, v);
     }
     ~TDynamicVector()
@@ -68,6 +66,8 @@ public:
     TDynamicVector& operator=(TDynamicVector&& v) noexcept
     {
         swap(*this, v);
+        v.pMem = nullptr;
+        v.sz = 0;
         return *this;
     }
 
@@ -170,7 +170,7 @@ public:
         else
             throw exception("error");
     }
-    T operator*(const TDynamicVector& v) noexcept(noexcept(T()))
+    T operator*(const TDynamicVector& v)
     {
         int result = 0;
         if (sz == v.sz)
@@ -305,7 +305,7 @@ public:
             for (size_t i = 0; i < sz; i++)
                 for (size_t j = 0; j < sz; j++)
                     for (size_t k = 0; k < sz; k++)
-                        result[i][j] += m[k][j] * pMem[i][k];
+                        result[i][j] += pMem[i][k] * m[k][j];
             return result;
         }
         else
@@ -327,7 +327,7 @@ public:
         for (size_t i = 0; i < v.sz; i++)
         {
             for (size_t j = 0; j < v.sz; j++)
-                ostr << v.pMem[i][j] << std::setw(8);
+                ostr << right << setw(10) << v.pMem[i][j];
             ostr << "\n";
         }
         return ostr;
