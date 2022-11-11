@@ -65,9 +65,10 @@ public:
     }
     TDynamicVector& operator=(TDynamicVector&& v) noexcept
     {
+        delete[] pMem;
+        pMem = nullptr;
+        sz = 0;
         swap(*this, v);
-        v.pMem = nullptr;
-        v.sz = 0;
         return *this;
     }
 
@@ -255,7 +256,7 @@ public:
     }
 
     // матрично-скалярные операции
-    TDynamicMatrix<T> operator*(const T& val)
+    TDynamicMatrix operator*(const T& val)
     {
         TDynamicMatrix<T> result(sz);
         for (size_t i = 0; i < sz; i++)
@@ -264,7 +265,7 @@ public:
     }
 
     // матрично-векторные операции
-    TDynamicVector<T> operator*(const TDynamicVector<T>& v)
+    TDynamicVector operator*(const TDynamicVector<T>& v)
     {
         TDynamicVector<T> result(sz);
         for (size_t i = 0; i < sz; i++)
