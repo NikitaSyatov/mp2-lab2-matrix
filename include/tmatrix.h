@@ -265,7 +265,7 @@ public:
     }
 
     // матрично-векторные операции
-    TDynamicVector operator*(const TDynamicVector<T>& v)
+    TDynamicVector<T> operator*(const TDynamicVector<T>& v)
     {
         TDynamicVector<T> result(sz);
         for (size_t i = 0; i < sz; i++)
